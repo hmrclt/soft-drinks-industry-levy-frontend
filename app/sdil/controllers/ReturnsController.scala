@@ -114,7 +114,7 @@ class ReturnsController (
     journeyEnd(key, now, Html(returnDate).some, whatHappensNext, Html(getTotal).some)
   }
 
-  private def askNewWarehouses()(implicit hc: HeaderCarrier): WebMonad[List[Site]] = for {
+  private[controllers] def askNewWarehouses()(implicit hc: HeaderCarrier): WebMonad[List[Site]] = for {
     addWarehouses  <- ask(bool(), "ask-secondary-warehouses-in-return")
     firstWarehouse <- ask(warehouseSiteMapping,"first-warehouse")(warehouseSiteForm, implicitly, extraMessages, implicitly) when
       addWarehouses
