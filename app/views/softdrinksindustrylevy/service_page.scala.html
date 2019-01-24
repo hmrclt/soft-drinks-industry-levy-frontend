@@ -16,16 +16,15 @@
 
 @import sdil.config.AppConfig
 @import sdil.models.backend.UkAddress
-@import views.html.softdrinksindustrylevy.helpers._
 @import sdil.models._
 @import sdil.models.backend.Subscription
 @import sdil.models.RegistrationFormData
 @import sdil.models.retrieved.RetrievedSubscription
-@import uk.gov.hmrc.play.views.html.helpers._
 @import java.time.format.DateTimeFormatter._
 @import java.time.LocalDateTime
 @import java.time.LocalDate
 @import java.time.ZoneId
+@import views.html.softdrinksindustrylevy.helpers._
 
 @(address: Address, sdilReference: String, subscription: RetrievedSubscription, periodsDue: List[ReturnPeriod] = Nil, lastReturn: Option[SdilReturn], balance: BigDecimal, interest: BigDecimal = 0)(implicit request: Request[_], messages: Messages, config: AppConfig)
 
