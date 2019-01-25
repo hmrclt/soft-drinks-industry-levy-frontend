@@ -16,25 +16,32 @@
 
 package sdil.controllers
 
+import cats.implicits._
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
+import play.api.libs.json._
+import play.api.mvc._
+import uk.gov.hmrc.http.{CoreDelete, CoreGet, CorePut, HeaderCarrier}
+import com.softwaremill.macwire._
+import play.api.test.FakeRequest
+import uk.gov.hmrc.http.cache.client.ShortLivedHttpCaching
+
+import scala.concurrent._
+import duration._
+import org.scalatest.MustMatchers._
 import com.softwaremill.macwire._
 import org.mockito.ArgumentMatchers.{any, eq => matching}
 import org.mockito.Mockito._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import sdil.config.SDILShortLivedCaching
 import sdil.models.RegistrationFormData
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.~
 
 import scala.concurrent.Future
-import play.api.mvc._
-import sdil.uniform._
-import uk.gov.hmrc.http.HeaderCarrier
-import cats.implicits._
-import uk.gov.hmrc.uniform.webmonad._
-import uk.gov.hmrc.uniform._
-import play.api.libs.json._
 
 class ReturnsControllerSpec extends ControllerSpec {
 
@@ -51,18 +58,29 @@ class ReturnsControllerSpec extends ControllerSpec {
     "askNewWarehouses" in {
       def subProgram = controller.askNewWarehouses()(hc) >>
       controller.resultToWebMonad[Result](controller.Ok("fin!"))
-      val persistence = new SharedSessionPersistence(/* serialise the answers here */ )
+      val persistence = SharedSessionPersistence("ask-secondary-warehouses-in-return" -> Json.toJson(false))
 
       // dummy up a post request, may need to add in a session id too in order to avoid a redirect
-      def request: Request[AnyContent] = ??? 
+      def request: Request[AnyContent] = FakeRequest().withFormUrlEncodedBody("utr" -> "", "postcode" -> "")
       def output = controller.runInner(request)(subProgram)(
-        "lastPage" /* replace with the key of the very last form page */
+        "production-site-details" /* replace with the key of the very last form page */
       )(persistence.dataGet, persistence.dataPut)
       // We should get 'fin!' in the result as long as all the validation passes
+//      output.result(10 seconds) must include("fin!")
+      val blah: Result = Await.result(output, 10 seconds)
+      1 mustBe 1
     }
   }
 
-  lazy val controller: ReturnsController = ??? //wire[ReturnsController]
-  lazy val hc: HeaderCarrier = ???
+  lazy val controller: ReturnsController = wire[ReturnsController]
+  lazy val shortLivedCaching: ShortLivedHttpCaching = new ShortLivedHttpCaching {override def baseUri: String = ???
+
+    override def domain: String = ???
+
+    override def defaultSource: String = ???
+
+    override def http: CoreGet with CorePut with CoreDelete = ???
+  }
+  lazy val hc: HeaderCarrier = HeaderCarrier()
 
 }
