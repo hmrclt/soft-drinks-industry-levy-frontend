@@ -73,7 +73,8 @@ class ReturnsControllerSpec extends ControllerSpec {
   }
 
   lazy val controller: ReturnsController = wire[ReturnsController]
-  lazy val shortLivedCaching: ShortLivedHttpCaching = new ShortLivedHttpCaching {override def baseUri: String = ???
+  lazy val shortLivedCaching: ShortLivedHttpCaching = new ShortLivedHttpCaching {
+    override def baseUri: String = ???
 
     override def domain: String = ???
 
