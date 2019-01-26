@@ -26,11 +26,11 @@
 @main_template(Messages("balance.history")) {
 
     <a class="link-back" href="@sdil.controllers.routes.ServicePageController.show">@Messages("sdil.common.back")</a>
-    
-    <h1 class="heading-large">
-        <span class="govuk-caption-xl">
-            @orgName
-        </span>
+
+    <span class="govuk-caption-xl service-comp-name">
+        @orgName
+    </span>
+    <h1 class="heading-large service-header">
         @Messages("balance.table.title")
     </h1>
     <p>
@@ -62,11 +62,11 @@
             <caption class="visually-hidden">@Messages("balance.table.caption")</caption>
             <thead>
                 <tr>
-                    <th>@Messages("date.time")</th>
-                    <th>@Messages("transaction")</th>
-                    <th class="numeric">@Messages("pound.credits")</th>
-                    <th class="numeric">@Messages("pound.debits")</th>
-                    <th class="numeric">@Messages("pound.balance")</th>
+                    <th scope="col">@Messages("date.time")</th>
+                    <th scope="col">@Messages("transaction")</th>
+                    <th scope="col" class="numeric">@Messages("pound.credits")</th>
+                    <th scope="col" class="numeric">@Messages("pound.debits")</th>
+                    <th scope="col" class="numeric">@Messages("pound.balance")</th>
                 </tr>
             </thead>
 

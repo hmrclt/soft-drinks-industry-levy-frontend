@@ -83,14 +83,14 @@
                         </td>
                         @if(items.length > min) {
                             <td class="@if(showEdit) {align-centre} else {align-right}">
-                                <button name="@key" value="Delete.@id" class="link-button no-shadow">@Messages(Seq(s"$key.delete", "delete"))</button>
+                                <button name="@key" value="Delete.@id" class="link-button no-shadow">@Messages(Seq(s"$key.delete", "Remove"))</button>
                             </td>
                         } else {
                             <td/>
                         }
                         @if(showEdit) {
                             <td class="align-right">
-                                <button name="@key" value="Edit.@id" class="link-button no-shadow">@Messages(Seq(s"$key.edit", "Change"))</button>
+                                <button name="@key" value="Edit.@id" class="link-button no-shadow">@Messages(Seq(s"$key.edit", "Edit"))</button>
                             </td>
                         } else {
                             <td/>
@@ -103,22 +103,22 @@
             @if(messages.isDefinedAt(s"$key.list-control.heading") && items.nonEmpty) {
                 <fieldset class="form-field-group">
                     <legend>
-                        <h2 class="heading-small add-to-list" aria-hidden="true">@Messages(s"$key.list-control.heading")</h2>
+                        <h2 class="heading-small add-to-list">@Messages(s"$key.list-control.heading")</h2>
                     </legend>
 
             }
-                @if(messages.isDefinedAt(s"$key.list-control.lead")) {
-                    <span class="form-hint">@Messages(s"$key.list-control.lead")</span>
-                }
-                @inputRadioGroup(
-                    form(key),
-                    List[Control](Add, Done).map(_.toString).map{v => (v, Messages(key + ".option." + v.toLowerCase))},
-                    '_labelClass -> "block-label",
-                    '_labelAfter -> true,
-                    '_groupClass -> "inline",
-                    '_div -> true,
-                    '_groupDivClass -> "inline"
-                )
+                    @if(messages.isDefinedAt(s"$key.list-control.lead")) {
+                        <span class="form-hint">@Messages(s"$key.list-control.lead")</span>
+                    }
+                    @inputRadioGroup(
+                        form(key),
+                        List[Control](Add, Done).map(_.toString).map{v => (v, Messages(key + ".option." + v.toLowerCase))},
+                        '_labelClass -> "block-label",
+                        '_labelAfter -> true,
+                        '_groupClass -> "inline",
+                        '_div -> true,
+                        '_groupDivClass -> "inline"
+                    )
                 </fieldset>
         </div>
         @if(messages.isDefinedAt(s"$key.help")) {
