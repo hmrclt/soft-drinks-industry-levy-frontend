@@ -31,7 +31,7 @@ pipelineStages in Assets := Seq(concat)
 // ================================================================================
 // Testing
 // ================================================================================
-{
+
   import scoverage.ScoverageKeys._
   coverageExcludedPackages := Seq(
     "app.*",
@@ -42,6 +42,8 @@ pipelineStages in Assets := Seq(concat)
     "sdil.connectors.*",
     "sdil.models.*",
     "sdil.controllers.Routes",
+    "controllers.javascript.*",
+    "sdil.controllers.javascript.*",
     "sdil.controllers.RoutesPrefix",
     "testOnlyDoNotUseInAppConf.*",
     "sdil.controllers.test.*",
@@ -52,7 +54,7 @@ pipelineStages in Assets := Seq(concat)
   coverageMinimum := 80
   coverageFailOnMinimum := false
   coverageHighlighting := true
-}
+
 
 libraryDependencies ++= Seq(
   "uk.gov.hmrc"            %% "hmrctest"           % "3.0.0",
