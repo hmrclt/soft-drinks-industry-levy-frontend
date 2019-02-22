@@ -22,7 +22,7 @@ import ltbs.play.scaffold.SdilComponents
 import org.scalatest.{FlatSpec, Matchers}
 import play.api.data.Form
 import play.api.test.FakeRequest
-import sdil.models.Address
+import sdil.models.{Address, Litreage}
 import sdil.models.backend.{Site, UkAddress}
 import sdil.utils.TestWiring
 
@@ -30,18 +30,30 @@ class SdilComponents extends FlatSpec with Matchers with TestWiring {
 
   val address : Address =  Address("line1", "line2", "line3", "line4", "AL1 1UJ")
   val uKAddress : UkAddress = UkAddress(List("ukAddr1", "ukAddr2"), "WD25 7HQ")
+  val litreage : Litreage = Litreage(BigDecimal(1.24), BigDecimal(576.89))
   val requestContactDetails = FakeRequest().withFormUrlEncodedBody(
     "fullName" -> "Bill Gates",
     "position" -> "CEO retired",
-    "phoneNumber" -> "No one knows",
+    "phoneNumber" -> "07867654567",
     "email" -> "billgates@microsoft.com"
   )
-
-  val requestSiteDetails = FakeRequest().withFormUrlEncodedBody(
-    "address" -> uKAddress.toString,
-    "position" -> "CEO retired",
-    "phoneNumber" -> "No one knows",
-    "email" -> "billgates@microsoft.com"
+  val reqContactDetailsMissing = FakeRequest().withFormUrlEncodedBody(
+    "fullName" -> "",
+    "position" -> "",
+    "phoneNumber" -> "",
+    "email" -> ""
+  )
+  val reqContactDetailsWrongLengths = FakeRequest().withFormUrlEncodedBody(
+    "fullName" -> "Morethan 40 chars -- rgfrefrefregvregvregre",
+    "position" -> "Morethan 150 chars -- sdgfdsgfdsgfdsgggggdfgdfgfgfgfgfdgfdgdfgfdgfdgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgfgfdggfdgdfgdfgdfgrgfrefrefregvregvregrhjtyjtyjtyhjtyhjtyhjtyhrtye",
+    "phoneNumber" -> "546546546565465465465464634",
+    "email" -> "Morethan 132 chars -- sdgfdsgfdsgfdsgggggdfgdfgfgfgfgfdgfdgdfgfdgfdgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgdfgfgfdggfdgdfgdfgdfgrgfrefrefregvregvregre"
+  )
+  val reqContactDetailsWrongChars = FakeRequest().withFormUrlEncodedBody(
+    "fullName" -> "&*()ghghjgjjj",
+    "position" -> "&*()ghghjgjjj",
+    "phoneNumber" -> "&*()ghghjgjjj",
+    "email" -> "&*()ghghjgjjj"
   )
 
 
@@ -50,8 +62,11 @@ class SdilComponents extends FlatSpec with Matchers with TestWiring {
 
   "A SdilComponent Call for contactDetails" should "correctly bind" in {
 
-    val addressHtmlVal = SdilComponents.addressHtml.showHtml(address)
-    val contactDetailsVal = SdilComponents.contactDetailsForm.asHtmlForm("fail data", formContactDetails.bindFromRequest()(requestContactDetails))
+    SdilComponents.addressHtml.showHtml(address)
+    SdilComponents.contactDetailsForm.asHtmlForm("fail data", formContactDetails.bindFromRequest()(requestContactDetails))
+    SdilComponents.contactDetailsForm.asHtmlForm("fail data", formContactDetails.bindFromRequest()(reqContactDetailsMissing))
+    SdilComponents.contactDetailsForm.asHtmlForm("fail data", formContactDetails.bindFromRequest()(reqContactDetailsWrongLengths))
+    SdilComponents.contactDetailsForm.asHtmlForm("fail data", formContactDetails.bindFromRequest()(reqContactDetailsWrongChars))
 
     val dateMap = Map("day" ->  "01",
     "month" -> "02",
@@ -79,11 +94,11 @@ class SdilComponents extends FlatSpec with Matchers with TestWiring {
     SdilComponents.startDate.bind(allMissingMap)
     SdilComponents.startDate.bind(invalidDayMap)
 
-    SdilComponents.numeric("001")
-    SdilComponents.numeric("NotNumberic").bind(Map("dfgdf" -> "dfvdfv"))
-    SdilComponents.numeric("22.345")
+    SdilComponents.numeric("litreage").bind(Map("text" -> "2.35"))
+    SdilComponents.siteProgressiveRevealHtml.showHtml(siteObj)
+    SdilComponents.showLitreage.showHtml(litreage)
+    SdilComponents.longTupToLitreage((20L, 505L))
 
-    SdilComponents.siteProgressiveRevealHtml.showHtml(siteObj).body
 
 
     1 shouldBe 1
